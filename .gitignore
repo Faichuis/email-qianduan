@@ -20,7 +20,8 @@
 *.zip
 *.tar.gz
 *.rar
-/node_modules
+package-lock.json
+/node_modules/
 /.idea
 /资料
 .package-lock.json
