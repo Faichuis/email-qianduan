@@ -6,7 +6,7 @@
                     <a href="javascript:;">邮箱管理平台</a>
                 </div>
                 <div>
-                    <el-select v-model="value">
+                    <el-select v-model="selectValue">
                         <el-option
                                 v-for="item in options"
                                 :key="item.userMailBoxId"
@@ -14,7 +14,10 @@
                                 :value="item.account">
                         </el-option>
                     </el-select>
-                    <el-button type="primary" icon="el-icon-edit" circle @click="handleEdit"></el-button>
+                    <el-button type="primary" round @click="addEmail">新增</el-button>
+                    <el-button type="primary" round @click="editEmail">修改</el-button>
+                    <el-button type="primary" round @click="deleteEmail">删除</el-button>
+                    <el-button type="primary" round @click="detailEmail">查看</el-button>
                 </div>
                 <div class="topbar-user">
                     <a href="javascript:;" v-if="username">{{username}}</a>
@@ -24,41 +27,69 @@
             </div>
             <!-- 编辑弹出框 -->
             <el-dialog title="用户邮箱管理" :visible.sync="editVisible" width="60%" style="text-align: center">
-                <el-button @click="addNew">新增</el-button>
-                <el-button>修改</el-button>
+                <el-button @click="addEmail">新增</el-button>
+                <el-button @click="editEmail">修改</el-button>
                 <el-button>删除</el-button>
                 <el-button>查看</el-button>
             </el-dialog>
-            <!-- 编辑新增 -->
+            <!-- 新增 -->
             <el-dialog title="新增邮箱" :visible.sync="addNewVisible" width="60%" style="text-align: center">
-                <div>
-                    邮箱号：
-                    <el-input
-                            placeholder="请输入内容"
-                            prefix-icon="el-icon-search"
-                    >
-                    </el-input>
-                </div>
-                <div>
-                    密码：
-                    <el-input
-                            placeholder="请输入内容"
-                            prefix-icon="el-icon-search"
-                    >
-                    </el-input>
-                </div>
-                <div>
-                    备注：
-                    <el-input
-                            placeholder="请输入内容"
-                            prefix-icon="el-icon-search"
-                    >
-                    </el-input>
-                </div>
+                <el-form ref="form" :model="userMailBoxInfo" label-width="80px">
+                    <el-form-item >
+                        <div>
+                            邮箱号：<el-input v-model="userMailBoxInfo.account" placeholder="请输入内容" ></el-input>
+                        </div>
+                        <div>
+                            密码：<el-input v-model="userMailBoxInfo.password" placeholder="请输入内容" ></el-input>
+                        </div>
+                        <div>
+                            备注：<el-input v-model="userMailBoxInfo.remark" placeholder="请输入内容" ></el-input>
+                        </div>
+                    </el-form-item>
+                </el-form>
                 <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="saveEdit()">确 定</el-button>
-            <el-button @click="editVisible = false">取 消</el-button>
-        </span>
+                    <el-button type="primary" @click="addSave()">确 定</el-button>
+                    <el-button @click="addNewVisible = false">取 消</el-button>
+                </span>
+            </el-dialog>
+            <!-- 修改 -->
+            <el-dialog title="修改邮箱" :visible.sync="editEmailVisible" width="60%" style="text-align: center">
+                <el-form ref="form" :model="userMailBoxInfo" label-width="80px">
+                    <el-form-item >
+                        <div>
+                            邮箱号：<el-input v-model="userMailBoxInfo.account" :disabled="true" placeholder="请输入内容" ></el-input>
+                        </div>
+                        <div>
+                            密码：<el-input v-model="userMailBoxInfo.password" placeholder="请输入内容" ></el-input>
+                        </div>
+                        <div>
+                            备注：<el-input v-model="userMailBoxInfo.remark" placeholder="请输入内容" ></el-input>
+                        </div>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="editSave()">确 定</el-button>
+                    <el-button @click="editEmailVisible = false">取 消</el-button>
+                </span>
+            </el-dialog>
+            <!-- 删除 -->
+            <el-dialog title="删除邮箱" :visible.sync="deleteEmailVisible" width="60%" style="text-align: center">
+                <h4>{{selectValue}}</h4>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="deleteSave">确 定</el-button>
+                    <el-button @click="deleteEmailVisible = false">取 消</el-button>
+                </span>
+            </el-dialog>
+            <!-- 查看 -->
+            <el-dialog title="查看邮箱" :visible.sync="detailEmailVisible" width="60%" style="text-align: center">
+                <el-table :data="detailTable" stripe style="width: 100%">
+                    <el-table-column prop="account" label="邮箱号" width="180"></el-table-column>
+                    <el-table-column prop="password" label="密码" width="180"></el-table-column>
+                    <el-table-column prop="remark" label="备注"></el-table-column>
+                </el-table>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="detailEmailVisible = false">取 消</el-button>
+                </span>
             </el-dialog>
         </div>
     </div>
@@ -73,11 +104,27 @@
         data() {
             return {
                 keyword: "请输入产品关键字",
-                options: [],
-                value: '',
+                options: [{
+                    userMailBoxId:'',
+                    account:''
+                }],
                 editVisible: false,
+                selectValue: '',
                 addNewVisible: false,
-                userCode:''
+                editEmailVisible: false,
+                deleteEmailVisible: false,
+                detailEmailVisible: false,
+                userMailBoxInfo:{
+                    account:'',
+                    password:'',
+                    remark:'',
+                    userCode:''
+                },
+                detailTable:[{
+                    account:'',
+                    password:'',
+                    remark:''
+                }],
             }
 
         },
@@ -95,28 +142,13 @@
 
             this.getEmailList();
 
-            let params = this.$route.params;
-            if (params && params.from === 'login') {
-                this.getCartCount();
-            }
         },
         methods: {
 
             login() {
                 this.$router.push('/login');
             },
-            getEmailList() {
-                let userCode =  getCookie('userCode');
-                this.axios.post('/api/userMail/selectMailbox', {
-                    userCode: userCode,
-                },{headers: {'userCode': userCode}}).then((res) => {
-                    this.options = res.data;
-                }).catch((err) => {
-                    window.console.log(err.message)
-                })
-            },
-            getCartCount() {
-            },
+
             logout() {
                 this.$cookie.set('token', '');
                 this.$cookie.set('username', '');
@@ -126,13 +158,55 @@
                 this.$store.dispatch('saveCartCount', '0');
 
             },
-            doSearch() {
-                this.$router.push(`/searchResult/${this.keyword}`).catch(err => {
-                    window.console.log(err)
-                });
+            getEmailList() {
+                let userCode =  getCookie('userCode');
+                this.axios.post('/api/userMail/selectMailbox', {
+                    userCode: userCode,
+                },{headers: {'userCode': userCode}}).then((res) => {
+                    this.options = res.data;
+                    this.selectValue = this.options[0].account;
+                }).catch((err) => {
+                    window.console.log(err.message)
+                })
             },
-            goToCart() {
-                this.$router.push('/cart');
+            addSave(){
+
+                let userCode =  getCookie('userCode');
+                this.userMailBoxInfo.userCode = userCode;
+                this.axios.post('/api/userMail/saveMailbox', this.userMailBoxInfo
+                ,{headers: {'userCode': userCode}}).then(() => {
+                    this.addNewVisible = false;
+                    this.getEmailList();
+                }).catch((err) => {
+                    window.console.log(err.message)
+                })
+
+            },
+            editSave(){
+
+                let userCode =  getCookie('userCode');
+                this.userMailBoxInfo.userCode = userCode;
+                this.axios.post('/api/userMail/updateMailbox', this.userMailBoxInfo
+                    ,{headers: {'userCode': userCode}}).then(() => {
+                    this.editEmailVisible = false;
+                    this.getEmailList();
+                }).catch((err) => {
+                    window.console.log(err.message)
+                })
+            },
+            deleteSave(){
+
+                let userCode =  getCookie('userCode');
+                let email = this.options.filter(item=>item.account === this.selectValue)[0];
+                this.axios.post('/api/userMail/delMailbox', {
+                    userCode:email.userCode,
+                    account:email.account
+                    },{headers: {'userCode': userCode}}).then(() => {
+                    this.deleteEmailVisible = false;
+                    this.getEmailList();
+                }).catch((err) => {
+                    window.console.log(err.message)
+                })
             },
             open() {
                 this.$confirm('', '用户邮箱管理', {
@@ -152,14 +226,29 @@
                     });
                 });
             },
-            // 编辑操作
-            handleEdit(index, row) {
-                this.dynamicValidateForm = row;
-                this.editVisible = true;
-            },
             // 新增邮箱
-            addNew() {
-                this.addNewVisible = true
+            addEmail() {
+                this.addNewVisible = true;
+                this.userMailBoxInfo = {};
+            },
+            // 修改邮箱
+            editEmail() {
+                this.editEmailVisible = true;
+
+                let email = this.options.filter(item=>item.account === this.selectValue);
+                window.console.log(email);
+                this.userMailBoxInfo = email[0];
+            },
+            // 删除油箱
+            deleteEmail(){
+                this.deleteEmailVisible = true;
+            },
+            // 删除油箱
+            detailEmail(){
+                this.detailEmailVisible = true;
+                let email = this.options.filter(item=>item.account === this.selectValue);
+                this.detailTable = email;
+                window.console.log(this.detailTable);
             }
         }
     }

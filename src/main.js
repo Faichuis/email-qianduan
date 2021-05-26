@@ -85,7 +85,7 @@ axios.interceptors.response.use(function(response){
 
 Vue.use(ElementUI);
 // Vue.use(Autocomplete);
-// Vue.use(Button,Menu,Select);
+Vue.use(ElementUI.Button,ElementUI.Form);
 Vue.use(VueAxios,axios);
 Vue.use(VueCookie);
 Vue.use(VueLazyLoad,{
