@@ -1,15 +1,11 @@
 <template>
   <div class="index-page"> 
     <menu-banner></menu-banner>
-    <div class="gray-page"> 
-      <goods-sale></goods-sale> 
-    </div>
   </div>
 </template>
 
 <script> 
 import MenuBanner from '../components/index/MenuBanner' 
-import GoodsSale from '../components/index/GoodsSale'
 
 export default {
   data () {
@@ -17,7 +13,6 @@ export default {
   },
   components: { 
     'MenuBanner': MenuBanner, 
-    'GoodsSale': GoodsSale,
   }
 }
 </script>

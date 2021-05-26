@@ -4,7 +4,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueLazyLoad from 'vue-lazyload'
 import VueCookie from 'vue-cookie'
-import { Message,Autocomplete,Button,Menu } from 'element-ui'
+import ElementUI from 'element-ui'
+// import { Message,Autocomplete,Button,Menu,Select } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 // npm install --save font-awesome
 import 'font-awesome/css/font-awesome.min.css'
@@ -74,23 +75,24 @@ axios.interceptors.response.use(function(response){
     }
     return Promise.reject(res);
   }else{
-    Message.warning(res.message);
+      ElementUI.Message.warning(res.message);
     return Promise.reject(res);
   }
-},(error)=>{ 
-  Message.error(error.message);
+},(error)=>{
+    ElementUI.Message.error(error.message);
   return Promise.reject(error);
 });
 
-Vue.use(Autocomplete);
-Vue.use(Button,Menu);
+Vue.use(ElementUI);
+// Vue.use(Autocomplete);
+// Vue.use(Button,Menu,Select);
 Vue.use(VueAxios,axios);
 Vue.use(VueCookie);
 Vue.use(VueLazyLoad,{
   loading:'/imgs/loading-svg/loading-bars.svg',
   error:'/imgs/nopic.png'
 })
-Vue.prototype.$message = Message;
+Vue.prototype.$message = ElementUI.Message;
 Vue.config.productionTip = false
 
 

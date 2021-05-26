@@ -5,25 +5,58 @@
         <div class="topbar-menu">
           <a href="javascript:;">邮箱管理平台</a>
         </div>
+        <div>
+          <el-select v-model="value" placeholder="Lds@0303@163.com">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button type="primary" icon="el-icon-edit" circle @click="handleEdit"></el-button>
+        </div>
         <div class="topbar-user">
           <a href="javascript:;" v-if="username">{{username}}</a>
           <a href="javascript:;" v-if="!username" @click="login">登录</a>
           <a href="javascript:;" v-if="username" @click="logout">退出</a>
         </div>
       </div>
-    </div>
-    <div class="nav-header">
-      <div class="container">
-        <div class="header-logo">
-          <a href="/#/index"></a>
+      <!-- 编辑弹出框 -->
+      <el-dialog title="用户邮箱管理" :visible.sync="editVisible" width="60%" style="text-align: center">  
+          <el-button @click="addNew">新增</el-button>
+          <el-button>修改</el-button>
+          <el-button>删除</el-button>
+          <el-button>查看</el-button>
+      </el-dialog>
+      <!-- 编辑新增 -->
+      <el-dialog title="新增邮箱" :visible.sync="addNewVisible" width="60%" style="text-align: center">
+        <div>
+          邮箱号：<el-input
+          placeholder="请输入内容"
+          prefix-icon="el-icon-search"
+          >
+        </el-input>
         </div>
-        <div class="header-search">
-          <div class="wrapper">
-            <input type="text"  v-model="keyword" name="keyword">
-            <a href="javascript:;" @click="doSearch()"></a>
-          </div>
+        <div>
+          密码：<el-input
+          placeholder="请输入内容"
+          prefix-icon="el-icon-search"
+          >
+        </el-input>
         </div>
-      </div>
+        <div>
+          备注：<el-input
+          placeholder="请输入内容"
+          prefix-icon="el-icon-search"
+          >
+        </el-input>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="saveEdit()">确 定</el-button>
+            <el-button @click="editVisible = false">取 消</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -44,8 +77,20 @@
          {id:6,mainImage:"/imgs/nav-img/nav-3-6.jpg",subtitle:"产品名称",name:"产品名称",price:1000,currency:'元'},
 
         ],
-        keyword:"请输入产品关键字"
+        keyword:"请输入产品关键字",
+        options: [{
+          value: '选项1',
+          label: 'Lds@0303@163.com'
+        },
+        {
+          value: '选项2',
+          label: '...'
+        }],
+        value: '',
+        editVisible: false,
+        addNewVisible: false
       }
+      
     },
     computed:{
        username(){
@@ -91,6 +136,33 @@
       },
       goToCart(){
         this.$router.push('/cart');
+      },
+      open() {
+        this.$confirm('', '用户邮箱管理', {
+          cancelButtonText: '删除',
+          confirmButtonText: '新增',
+          type: 'info',
+          center: true
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+      // 编辑操作
+      handleEdit(index, row) {
+        this.dynamicValidateForm = row;
+        this.editVisible = true;
+      },
+      // 新增邮箱
+      addNew(){
+        this.addNewVisible = true
       }
     }
   }
@@ -99,10 +171,14 @@
   @import './../assets/scss/base.scss';
   @import './../assets/scss/mixin.scss';
   @import './../assets/scss/config.scss';
+  .el-input{
+    width: 50%;
+  }
   .header{
     .nav-topbar{
       height:39px;
       line-height:39px;
+      font-size: 15px;
       background-color:#333333;
       color:#B0B0B0;
       .container{
