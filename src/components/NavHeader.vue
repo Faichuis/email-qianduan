@@ -154,6 +154,7 @@
                 this.$cookie.set('username', '');
                 this.$cookie.set('userCode', '');
                 this.$message.success('退出成功');
+                this.$router.push('/login');
                 this.$store.dispatch('saveUserName', '');
                 this.$store.dispatch('saveCartCount', '0');
 
