@@ -17,23 +17,7 @@ export default new Router({
                     path: '/index',
                     name: 'index',
                     component: Index,
-                }, {
-                    path: '/product/:id',
-                    name: 'product',
-                    component: () => import('./pages/product.vue')
-                }, {
-                    path: '/detail/:id',
-                    name: 'detail',
-                    component: () => import('./pages/detail.vue')
-                }, {
-                    path: '/secKillDetail/:id',
-                    name: 'secKillDetail',
-                    component: () => import('./pages/secKillDetail.vue')
-                }, {
-                    path: '/secKillOrderConfirm/:id/:token',
-                    name: 'secKillOrderConfirm',
-                    component: () => import('./pages/secKillOrderConfirm.vue')
-                }
+                },
             ]
         },
         {
@@ -47,36 +31,24 @@ export default new Router({
             component: () => import('./pages/register.vue')
         } ,
         {
-            path: '/searchResult/:keywords',
-            name: 'searchResult',
-            component: () => import('./pages/searchResult.vue')
+            path: '/write',
+            name: 'write',
+            component: () => import('./components/index/Write.vue')
         },
         {
-            path: '/order',
-            name: 'order',
-            component: () => import('./pages/order.vue'),
-            children: [
-                {
-                    path: 'list',
-                    name: 'order-list',
-                    component: () => import('./pages/orderList.vue')
-                },
-                {
-                    path: 'status/:id',
-                    name: 'order-status-check',
-                    component: () => import('./pages/orderStatusCheck.vue')
-                },
-                {
-                    path: 'confirm',
-                    name: 'order-confirm',
-                    component: () => import('./pages/orderConfirm.vue')
-                },
-                {
-                    path: 'pay',
-                    name: 'order-pay',
-                    component: () => import('./pages/orderPay.vue')
-                },
-            ]
-        }
+            path: '/receive',
+            name: 'receive',
+            component: () => import('./components/index/Receive.vue')
+        },
+        {
+            path: '/manual',
+            name: 'manual',
+            component: () => import('./components/index/Manual.vue')
+        },
+        {
+            path: '/send',
+            name: 'send',
+            component: () => import('./components/index/Send.vue')
+        },
     ]
 });

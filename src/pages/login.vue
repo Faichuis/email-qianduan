@@ -54,6 +54,7 @@
                     }), {headers: {'Content-Type': 'application/json'}}).then((res) => {
 
                     setCookie("username", username, 120);
+                    setCookie("userCode", res.data.userCode);
                     this.saveUserName(username);
 
                     this.$router.push({

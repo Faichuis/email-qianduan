@@ -30,6 +30,8 @@
   </div>
 </template>
 
+
+
 <style scoped>
   .container{
     margin-left: 18%;
@@ -47,6 +49,9 @@
 
 <script>
   export default {
+
+    name:'send',
+
     data() {
       return {
         list: [{'address': 'NVIDIA Accounts', 'subject': 'NVIDA电子邮件验证', 'seen': true, 'date': '2020-11-07'}],

@@ -2,7 +2,7 @@
     <div>
         <nav-header></nav-header>
         <menu-banner></menu-banner>
-        <router-view></router-view>
+        <!--<router-view></router-view>-->
     </div>
 </template>
 

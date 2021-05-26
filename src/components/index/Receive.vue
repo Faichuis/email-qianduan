@@ -47,6 +47,9 @@
 
 <script>
   export default {
+
+    name: 'receive',
+
     data() {
       return {
         list: [{'address': 'NVIDIA Accounts', 'subject': 'NVIDA电子邮件验证', 'seen': true, 'date': '2020-11-07'}],
