@@ -10,5 +10,8 @@ export default {
   },
   saveCartCount(state, count) {
     state.cartCount = count;
+  },
+  saveEmailAccount(state, val) {
+    state.emailAccount = val;
   }
 }

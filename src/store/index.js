@@ -7,7 +7,7 @@ Vue.use(Vuex);
 const state = {
   token:'',
   username:'',//登录用0
-  cartCount:0//购物车商品数量
+  emailAccount:'',
 }
 export default new Vuex.Store({
   state,

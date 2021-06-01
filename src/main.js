@@ -41,6 +41,7 @@ function getCookie(c_name){
 // axios的拦截器   jwt+spring security
 axios.interceptors.request.use(config => {
   // jwt令牌
+    window.console.log(config);
   var token= getCookie("token");
   if (token !=undefined) {
     config.headers['Authorization'] = token; // 让每个请求携带自定义token 请根据实际情况自行修改
@@ -57,7 +58,7 @@ axios.interceptors.request.use(config => {
 
 // 接口错误拦截
 axios.interceptors.response.use(function(response){
-
+    window.console.log(response);
   let res = response.data;
   let path = location.hash;   
 

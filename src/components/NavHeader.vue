@@ -96,7 +96,7 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+
     import {getCookie} from '@/util/support';
 
     export default {
@@ -128,15 +128,15 @@
             }
 
         },
+        watch :{
+            selectValue(newVal){
+                this.$store.dispatch('saveEmailAccount',newVal);
+            }
+        },
         computed: {
             username() {
                 return this.$store.state.username;
-            },
-            cartCount() {
-                // 取
-                return this.$store.state.cartCount;
-            },
-            ...mapState(['username', 'cartCount'])
+            }
         },
         mounted() {
 
@@ -156,7 +156,6 @@
                 this.$message.success('退出成功');
                 this.$router.push('/login');
                 this.$store.dispatch('saveUserName', '');
-                this.$store.dispatch('saveCartCount', '0');
 
             },
             getEmailList() {
@@ -208,24 +207,6 @@
                 }).catch((err) => {
                     window.console.log(err.message)
                 })
-            },
-            open() {
-                this.$confirm('', '用户邮箱管理', {
-                    cancelButtonText: '删除',
-                    confirmButtonText: '新增',
-                    type: 'info',
-                    center: true
-                }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
             },
             // 新增邮箱
             addEmail() {
