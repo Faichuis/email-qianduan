@@ -108,8 +108,20 @@
         },
         mounted() {
             this.getReceiveList(this.pageObj.pageNum, this.pageObj.pageSize);
+            this.readEmail();
         },
         methods: {
+
+            readEmail(){
+                let userCode = getCookie('userCode');
+                this.axios.post('/api/email/readEmailByUserCode', {
+                    userCode: userCode
+                }, {headers: {'userCode': userCode}}).then((res) => {
+
+                }).catch((err) => {
+                    window.console.log(err.message)
+                })
+            },
 
             getReceiveList(size, current) {
                 let userCode = getCookie('userCode');
