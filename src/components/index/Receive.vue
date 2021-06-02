@@ -117,9 +117,13 @@
                 this.axios.post('/api/email/readEmailByUserCode', {
                     userCode: userCode
                 }, {headers: {'userCode': userCode}}).then((res) => {
-
+                    if(res.code === 1){
+                        this.$message({type: 'success', message: res.msg});
+                    } else {
+                        this.$message({type: 'info', message: res.msg});
+                    }
                 }).catch((err) => {
-                    window.console.log(err.message)
+                    this.$message({type: 'info', message: err.message});
                 })
             },
 
@@ -134,13 +138,18 @@
                     page: size,
                     pageSize: current,
                 }, {headers: {'userCode': userCode}}).then((res) => {
-                    this.list = res.data.records;
-                    this.pageObj.pageNum = res.data.current;
-                    this.pageObj.pageSize = res.data.size;
-                    this.pageObj.total = res.data.total;
+                    if(res.code === 1){
+                        this.$message({type: 'success', message: res.msg});
+                        this.list = res.data.records;
+                        this.pageObj.pageNum = res.data.current;
+                        this.pageObj.pageSize = res.data.size;
+                        this.pageObj.total = res.data.total;
+                    } else {
+                        this.$message({type: 'info', message: res.msg});
+                    }
 
                 }).catch((err) => {
-                    window.console.log(err.message)
+                    this.$message({type: 'info', message: +err.message});
                 })
             },
             handleSizeChange(val) {
@@ -155,16 +164,28 @@
                 this.getReceiveList(this.pageObj.pageNum, this.pageObj.pageSize);
             },
             deleteEmail(row) {
-                let userCode = getCookie('userCode');
-                this.axios.post('/api/email/delEmail', {
-                    userCode: userCode,
-                    emailId: row.emailId
-                }, {headers: {'userCode': userCode}}).then((res) => {
-                    this.getReceiveList(this.pageObj.pageNum, this.pageObj.pageSize);
 
-                }).catch((err) => {
-                    window.console.log(err.message)
+                this.$confirm('邮件删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let userCode = getCookie('userCode');
+                    this.axios.post('/api/email/delEmail', {
+                        userCode: userCode,
+                        emailId: row.emailId
+                    }, {headers: {'userCode': userCode}}).then((res) => {
+                        if(res.code === 1){
+                            this.getReceiveList(this.pageObj.pageNum, this.pageObj.pageSize);
+                            this.$message({type: 'success', message: res.msg});
+                        } else {
+                            this.$message({type: 'info', message: res.msg});
+                        }
+                    }).catch((err) => {
+                        this.$message({type: 'info', message: err.message});
+                    });
                 })
+
             },
             searchEmailDetail(row) {
                 let userCode = getCookie('userCode');
@@ -172,20 +193,23 @@
                     userCode: userCode,
                     emailId: row.emailId
                 }, {headers: {'userCode': userCode}}).then((res) => {
-                    this.detailEmail = res.data;
-                    window.console.log('123:'+this.detailEmail)
+                    if(res.code === 1){
+                        this.detailEmailVisible = true;
+                        this.detailEmail = res.data;
+                        this.$message({type: 'success', message: res.msg});
+                    } else {
+                        this.$message({type: 'info', message: res.msg});
+                    }
                 }).catch((err) => {
-                    window.console.log(err.message)
+                    this.$message({type: 'info', message: err.message});
                 });
-
-                this.detailEmailVisible = true;
             },
             download(row){
                 let userCode = getCookie('userCode');
                 this.axios.get('/api/file/downloadFile?id='+row.id, {headers: {'userCode': userCode}}).then((res) => {
-
+                    this.$message({type: 'success', message: res.msg});
                 }).catch((err) => {
-                    window.console.log(err.message)
+                    this.$message({type: 'info', message: err.message});
                 })
 
             }

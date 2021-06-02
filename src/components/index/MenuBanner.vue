@@ -25,8 +25,8 @@
             <div>
                 <Write v-if="activeNum ==='1'"></Write>
                 <Receive v-if="activeNum ==='2'"></Receive>
-                <Send v-if="activeNum ==='3'"></Send>
-                <Manual v-if="activeNum ==='4'"></Manual>
+                <Manual v-if="activeNum ==='3'"></Manual>
+                <Send v-if="activeNum ==='4'"></Send>
             </div>
         </el-col>
 
@@ -57,7 +57,6 @@
             clickBtn(num){
                 let s = num.toString();
                 this.activeNum = s;
-                window.console.log(num)
             }
         }
     }

@@ -75,7 +75,6 @@
         },
         mounted(){
 
-            // this.headers = {userCode :userCode};
         },
         methods: {
             sendEmil(num){
@@ -96,20 +95,22 @@
                     fileInfoDtoList:this.fileInfoDtoList
                 },{headers: {'userCode': userCode}}).then((res) => {
                     if (res.code === 1){
+                        this.$message({type: 'success', message: res.msg});
                         this.fileInfoDtoList = [];
                         this.this.form.subject = '';
                         this.this.form.receivers = '';
                         this.emailContent = '';
                         this.fileInfoDtoList = [];
+                    }else {
+                        this.$message({type: 'info', message: res.msg});
                     }
 
                 }).catch((err) => {
-                    window.console.log(err.message)
+                    this.$message({type: 'info', message: err.message});
                 })
             },
             handleSuccess(res){
                 this.fileInfoDtoList.push(res.data);
-                window.console.log(this.fileInfoDtoList);
             },
             handleRemove(file, fileList) {
                 // console.log(file, fileList);
