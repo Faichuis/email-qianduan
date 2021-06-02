@@ -5,12 +5,10 @@ module.exports = {
         port: 8080,
         proxy: {
             '/api': {
-                // target:'http://localhost:8081',
-                // target:'http://yangguo.natapp1.cc',
-                target: 'http://localhost:9999',
+                target: 'http://127.0.0.1:9999',
                 changeOrigin: true,
                 pathRewrite: {
-                    '/api': ''
+                    '^/api': ''
                 }
             },
             'baiduMapApi': {

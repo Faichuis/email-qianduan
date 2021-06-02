@@ -11,7 +11,7 @@ export default {
   saveCartCount(context, count) {
     context.commit('saveCartCount', count);
   },
-  saveItemids(context,itemids){
-    context.commit('saveitemids',itemids);
+  saveEmailAccount(context, val) {
+    context.commit('saveEmailAccount', val);
   }
 }

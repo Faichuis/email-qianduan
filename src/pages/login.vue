@@ -5,7 +5,6 @@
                 <div class="login-form">
                     <h3>
                         <span class="checked">帐号登录</span>
-                        <!-- <span class="sep-line">|</span><span>扫码登录</span> -->
                     </h3>
                     <div class="input">
                         <input type="text" placeholder="请输入帐号" v-model="username">
@@ -33,8 +32,11 @@
     import Qs from 'qs'
 
     export default {
+
         Qs,
+
         name: 'login',
+
         data() {
             return {
                 username: '',
@@ -42,7 +44,10 @@
                 userId: ''
             }
         },
+
         methods: {
+            ...mapActions(['saveUserName']),
+
             login() {
                 let {username, password} = this;
 
@@ -52,22 +57,19 @@
                         userCode: username,
                         userPwd: password
                     }), {headers: {'Content-Type': 'application/json'}}).then((res) => {
+                        if (res.code === 1){
+                            this.$message({type: 'success', message: res.msg});
 
-                    setCookie("username", username, 120);
-                    setCookie("userCode", res.data.userCode);
-                    this.saveUserName(username);
-
-                    this.$router.push({
-                        name: 'index',
-                        params: {
-                            from: 'login'
+                            setCookie("username", username, 120);
+                            setCookie("userCode", res.data.userCode);
+                            this.saveUserName(res.data.userName);
+                            this.$router.push({name: 'index', params: {from: 'login'}});
+                        } else {
+                            this.$message({type: 'info', message: res.msg});
                         }
-                    });
+
                 })
             },
-
-            ...mapActions(['saveUserName']),
-
 
             register() {
                 this.$router.push({name:'Register'})

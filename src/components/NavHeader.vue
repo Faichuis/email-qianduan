@@ -35,15 +35,18 @@
             <!-- 新增 -->
             <el-dialog title="新增邮箱" :visible.sync="addNewVisible" width="60%" style="text-align: center">
                 <el-form ref="form" :model="userMailBoxInfo" label-width="80px">
-                    <el-form-item >
+                    <el-form-item>
                         <div>
-                            邮箱号：<el-input v-model="userMailBoxInfo.account" placeholder="请输入内容" ></el-input>
+                            邮箱号：
+                            <el-input v-model="userMailBoxInfo.account" placeholder="请输入内容"></el-input>
                         </div>
                         <div>
-                            密码：<el-input v-model="userMailBoxInfo.password" placeholder="请输入内容" ></el-input>
+                            密码：
+                            <el-input v-model="userMailBoxInfo.password" placeholder="请输入内容"></el-input>
                         </div>
                         <div>
-                            备注：<el-input v-model="userMailBoxInfo.remark" placeholder="请输入内容" ></el-input>
+                            备注：
+                            <el-input v-model="userMailBoxInfo.remark" placeholder="请输入内容"></el-input>
                         </div>
                     </el-form-item>
                 </el-form>
@@ -55,15 +58,18 @@
             <!-- 修改 -->
             <el-dialog title="修改邮箱" :visible.sync="editEmailVisible" width="60%" style="text-align: center">
                 <el-form ref="form" :model="userMailBoxInfo" label-width="80px">
-                    <el-form-item >
+                    <el-form-item>
                         <div>
-                            邮箱号：<el-input v-model="userMailBoxInfo.account" :disabled="true" placeholder="请输入内容" ></el-input>
+                            邮箱号：
+                            <el-input v-model="userMailBoxInfo.account" :disabled="true" placeholder="请输入内容"></el-input>
                         </div>
                         <div>
-                            密码：<el-input v-model="userMailBoxInfo.password" placeholder="请输入内容" ></el-input>
+                            密码：
+                            <el-input v-model="userMailBoxInfo.password" placeholder="请输入内容"></el-input>
                         </div>
                         <div>
-                            备注：<el-input v-model="userMailBoxInfo.remark" placeholder="请输入内容" ></el-input>
+                            备注：
+                            <el-input v-model="userMailBoxInfo.remark" placeholder="请输入内容"></el-input>
                         </div>
                     </el-form-item>
                 </el-form>
@@ -96,7 +102,7 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+
     import {getCookie} from '@/util/support';
 
     export default {
@@ -105,8 +111,8 @@
             return {
                 keyword: "请输入产品关键字",
                 options: [{
-                    userMailBoxId:'',
-                    account:''
+                    userMailBoxId: '',
+                    account: ''
                 }],
                 editVisible: false,
                 selectValue: '',
@@ -114,29 +120,29 @@
                 editEmailVisible: false,
                 deleteEmailVisible: false,
                 detailEmailVisible: false,
-                userMailBoxInfo:{
-                    account:'',
-                    password:'',
-                    remark:'',
-                    userCode:''
+                userMailBoxInfo: {
+                    account: '',
+                    password: '',
+                    remark: '',
+                    userCode: ''
                 },
-                detailTable:[{
-                    account:'',
-                    password:'',
-                    remark:''
+                detailTable: [{
+                    account: '',
+                    password: '',
+                    remark: ''
                 }],
             }
 
         },
+        watch: {
+            selectValue(newVal) {
+                this.$store.dispatch('saveEmailAccount', newVal);
+            }
+        },
         computed: {
             username() {
                 return this.$store.state.username;
-            },
-            cartCount() {
-                // 取
-                return this.$store.state.cartCount;
-            },
-            ...mapState(['username', 'cartCount'])
+            }
         },
         mounted() {
 
@@ -154,77 +160,81 @@
                 this.$cookie.set('username', '');
                 this.$cookie.set('userCode', '');
                 this.$message.success('退出成功');
+                this.$router.push('/login');
                 this.$store.dispatch('saveUserName', '');
-                this.$store.dispatch('saveCartCount', '0');
 
             },
             getEmailList() {
-                let userCode =  getCookie('userCode');
+                let userCode = getCookie('userCode');
                 this.axios.post('/api/userMail/selectMailbox', {
                     userCode: userCode,
-                },{headers: {'userCode': userCode}}).then((res) => {
-                    this.options = res.data;
-                    this.selectValue = this.options[0].account;
+                }, {headers: {'userCode': userCode}}).then((res) => {
+                    if (res.code === 1) {
+                        this.$message({type: 'success', message: res.msg});
+                        this.options = res.data;
+                        this.selectValue = this.options[0].account;
+                    } else {
+                        this.$message({type: 'info', message: res.msg});
+                    }
                 }).catch((err) => {
-                    window.console.log(err.message)
+                    this.$message({type: 'info', message: err.message});
                 })
             },
-            addSave(){
+            addSave() {
 
-                let userCode =  getCookie('userCode');
+                let userCode = getCookie('userCode');
                 this.userMailBoxInfo.userCode = userCode;
                 this.axios.post('/api/userMail/saveMailbox', this.userMailBoxInfo
-                ,{headers: {'userCode': userCode}}).then(() => {
-                    this.addNewVisible = false;
-                    this.getEmailList();
+                    , {headers: {'userCode': userCode}}).then((res) => {
+                    if (res.code === 1) {
+                        this.addNewVisible = false;
+                        this.getEmailList();
+                        this.$message({type: 'success', message: res.msg});
+                    } else {
+                        this.$message({type: 'info', message: res.msg});
+                    }
                 }).catch((err) => {
-                    window.console.log(err.message)
+                    this.$message({type: 'info', message: err.message});
                 })
 
             },
-            editSave(){
+            editSave() {
 
-                let userCode =  getCookie('userCode');
+                let userCode = getCookie('userCode');
                 this.userMailBoxInfo.userCode = userCode;
                 this.axios.post('/api/userMail/updateMailbox', this.userMailBoxInfo
-                    ,{headers: {'userCode': userCode}}).then(() => {
-                    this.editEmailVisible = false;
-                    this.getEmailList();
-                }).catch((err) => {
-                    window.console.log(err.message)
-                })
-            },
-            deleteSave(){
+                    , {headers: {'userCode': userCode}}).then((res) => {
+                    if (res.code === 1) {
+                        this.$message({type: 'success', message: res.msg});
+                        this.editEmailVisible = false;
+                        this.getEmailList();
+                    } else {
+                        this.$message({type: 'info', message: res.msg});
+                    }
 
-                let userCode =  getCookie('userCode');
-                let email = this.options.filter(item=>item.account === this.selectValue)[0];
-                this.axios.post('/api/userMail/delMailbox', {
-                    userCode:email.userCode,
-                    account:email.account
-                    },{headers: {'userCode': userCode}}).then(() => {
-                    this.deleteEmailVisible = false;
-                    this.getEmailList();
                 }).catch((err) => {
-                    window.console.log(err.message)
+                    this.$message({type: 'info', message: err.message});
                 })
             },
-            open() {
-                this.$confirm('', '用户邮箱管理', {
-                    cancelButtonText: '删除',
-                    confirmButtonText: '新增',
-                    type: 'info',
-                    center: true
-                }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+            deleteSave() {
+
+                let userCode = getCookie('userCode');
+                let email = this.options.filter(item => item.account === this.selectValue)[0];
+                this.axios.post('/api/userMail/delMailbox', {
+                    userCode: email.userCode,
+                    account: email.account
+                }, {headers: {'userCode': userCode}}).then((res) => {
+                    if (res.code === 1){
+                        this.deleteEmailVisible = false;
+                        this.getEmailList();
+                        this.$message({type: 'success', message: res.msg});
+                    } else {
+                        this.$message({type: 'info', message: res.msg});
+                    }
+
+                }).catch((err) => {
+                    this.$message({type: 'info', message: err.message});
+                })
             },
             // 新增邮箱
             addEmail() {
@@ -235,20 +245,18 @@
             editEmail() {
                 this.editEmailVisible = true;
 
-                let email = this.options.filter(item=>item.account === this.selectValue);
-                window.console.log(email);
+                let email = this.options.filter(item => item.account === this.selectValue);
                 this.userMailBoxInfo = email[0];
             },
             // 删除油箱
-            deleteEmail(){
+            deleteEmail() {
                 this.deleteEmailVisible = true;
             },
             // 删除油箱
-            detailEmail(){
+            detailEmail() {
                 this.detailEmailVisible = true;
-                let email = this.options.filter(item=>item.account === this.selectValue);
+                let email = this.options.filter(item => item.account === this.selectValue);
                 this.detailTable = email;
-                window.console.log(this.detailTable);
             }
         }
     }
