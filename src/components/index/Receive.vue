@@ -1,16 +1,16 @@
 <template>
     <div>
         <el-form ref="form" :model="form">
-            <el-form-item label="Subject">
+            <el-form-item label="主题">
                 <el-input v-model="form.subject"></el-input>
             </el-form-item>
-            <el-form-item label="Account">
+            <el-form-item label="邮箱号">
                 <el-input v-model="form.account"></el-input>
             </el-form-item>
-            <el-form-item label="FromAddress">
+            <el-form-item label="发件人">
                 <el-input v-model="form.fromAddress"></el-input>
             </el-form-item>
-            <el-form-item label="Receivers">
+            <el-form-item label="收件人">
                 <el-input v-model="form.receivers"></el-input>
             </el-form-item>
             <el-form-item>
@@ -21,17 +21,23 @@
 
             <el-table-column
                     prop="subject"
-                    label="subject"
+                    label="主题"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="makerDate"
-                    label="makerDate"
+                    label="发送时间"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="fromAddress"
-                    label="fromAddress">
+                    label="发件人">
+            </el-table-column>
+            <el-table-column prop="userSeen" label="是否已读">
+                <template slot-scope="scope">
+                    <p v-if="scope.row.userSeen === '0'">已读</p>
+                    <p v-else>未读</p>
+                </template>
             </el-table-column>
             <el-table-column>
                 <template slot-scope="scope">
@@ -81,7 +87,7 @@
     import {getCookie} from '@/util/support';
 
     export default {
-
+        // 收件箱
         name: 'receive',
 
         data() {
@@ -123,7 +129,7 @@
                         this.$message({type: 'info', message: res.msg});
                     }
                 }).catch((err) => {
-                    this.$message({type: 'info', message: err.message});
+                    this.$message({type: 'info', message: err.msg});
                 })
             },
 
@@ -149,7 +155,7 @@
                     }
 
                 }).catch((err) => {
-                    this.$message({type: 'info', message: +err.message});
+                    this.$message({type: 'info', message: +err.msg});
                 })
             },
             handleSizeChange(val) {
@@ -182,7 +188,7 @@
                             this.$message({type: 'info', message: res.msg});
                         }
                     }).catch((err) => {
-                        this.$message({type: 'info', message: err.message});
+                        this.$message({type: 'info', message: err.msg});
                     });
                 })
 
@@ -201,15 +207,16 @@
                         this.$message({type: 'info', message: res.msg});
                     }
                 }).catch((err) => {
-                    this.$message({type: 'info', message: err.message});
+                    this.$message({type: 'info', message: err.msg});
                 });
             },
             download(row){
                 let userCode = getCookie('userCode');
-                this.axios.get('/api/file/downloadFile?id='+row.id, {headers: {'userCode': userCode}}).then((res) => {
+                this.axios.get('/api/file/downloadFile?id='+row.id,
+                    {headers: {'userCode': userCode}}).then((res) => {
                     this.$message({type: 'success', message: res.msg});
                 }).catch((err) => {
-                    this.$message({type: 'info', message: err.message});
+                    this.$message({type: 'info', message: err.msg});
                 })
 
             }

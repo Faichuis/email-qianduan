@@ -177,7 +177,7 @@
                         this.$message({type: 'info', message: res.msg});
                     }
                 }).catch((err) => {
-                    this.$message({type: 'info', message: err.message});
+                    this.$message({type: 'info', message: err.msg});
                 })
             },
             addSave() {
@@ -194,7 +194,7 @@
                         this.$message({type: 'info', message: res.msg});
                     }
                 }).catch((err) => {
-                    this.$message({type: 'info', message: err.message});
+                    this.$message({type: 'info', message: err.msg});
                 })
 
             },
@@ -213,7 +213,7 @@
                     }
 
                 }).catch((err) => {
-                    this.$message({type: 'info', message: err.message});
+                    this.$message({type: 'info', message: err.msg});
                 })
             },
             deleteSave() {
@@ -233,7 +233,7 @@
                     }
 
                 }).catch((err) => {
-                    this.$message({type: 'info', message: err.message});
+                    this.$message({type: 'info', message: err.msg});
                 })
             },
             // 新增邮箱

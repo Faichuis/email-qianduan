@@ -106,7 +106,7 @@
                     }
 
                 }).catch((err) => {
-                    this.$message({type: 'info', message: err.message});
+                    this.$message({type: 'info', message: err.msg});
                 })
             },
             handleSuccess(res){
